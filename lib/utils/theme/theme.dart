@@ -1,3 +1,4 @@
+import 'package:ecommerce_user/utils/theme/widget_themes/card_theme.dart';
 import 'package:ecommerce_user/utils/theme/widget_themes/text_button_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class TAppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
     textButtonTheme: TTextButtonTheme.lightTextButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
+    cardTheme: TCardTheme.lightCardTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -42,5 +44,6 @@ class TAppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.darkOutlinedButtonTheme,
     textButtonTheme: TTextButtonTheme.darkTextButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.darkInputDecorationTheme,
+    cardTheme: TCardTheme.DarkCardTheme,
   );
 }

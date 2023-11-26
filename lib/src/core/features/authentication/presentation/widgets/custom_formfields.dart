@@ -3,7 +3,7 @@ import 'package:ecommerce_user/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
 class CustomFormField extends StatefulWidget {
-  CustomFormField({
+  const CustomFormField({
     super.key,
     required this.textEditingController,
     this.keyboardType,
@@ -14,12 +14,12 @@ class CustomFormField extends StatefulWidget {
     this.validator,
   });
 
-  TextEditingController textEditingController;
-  TextInputType? keyboardType;
-  bool autofocus;
-  bool obsecureText;
-  Widget? icondata;
-  String? hintText;
+  final TextEditingController textEditingController;
+  final TextInputType? keyboardType;
+  final bool autofocus;
+  final bool obsecureText;
+  final Widget? icondata;
+  final String? hintText;
   final String? Function(String? value)? validator;
 
   @override

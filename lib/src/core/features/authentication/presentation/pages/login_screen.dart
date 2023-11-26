@@ -11,8 +11,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -22,12 +23,17 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const AuthenticationBackground(),
               LoginForm(
-                  phoneController: phoneController,
+                  emailController: emailController,
                   passwordController: passwordController),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void clearForm() {
+    emailController.clear();
+    passwordController.clear();
   }
 }
