@@ -10,7 +10,7 @@ class ProductRepository {
     List<Product> productList = [];
 
     QuerySnapshot data = await products.get();
-    print('querysnapshot-----${data.docs}');
+    // print('querysnapshot-----${data.docs}');
 
     for (var doc in data.docs) {
       Product product = Product.fromMap(doc.data() as Map<String, dynamic>);
@@ -19,8 +19,32 @@ class ProductRepository {
       product.id = productId;
       productList.add(product);
     }
-    print('productList-----$productList');
+    // print('productList-----$productList');
 
     return productList;
   }
+
+  Future<Product?> getProductById(String productId) async {
+    DocumentSnapshot doc = await products.doc(productId).get();
+
+    if (doc.exists) {
+      Product product = Product.fromMap(doc.data() as Map<String, dynamic>);
+      product.id = doc.id;
+      return product;
+    } else {
+      return null;
+    }
+  }
+
+  // Future<String?> getProductById() async {
+  //   DocumentSnapshot doc = await products.doc().get();
+  //   print(doc);
+  //   if (doc.exists) {
+  //     // Product product = Product.fromMap(doc.data() as Map<String, dynamic>);
+  //     String productById = doc.id;
+  //     return productById;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 }

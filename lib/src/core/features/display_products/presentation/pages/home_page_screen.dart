@@ -1,11 +1,12 @@
+import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/discount.dart';
 import 'package:ecommerce_user/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cart/presentation/widgets/favorite_cart.dart';
 import '../../data/models/product_model.dart';
 import '../bloc/display_products_bloc.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/favorite_cart.dart';
+import 'product_details.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -24,23 +25,36 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hello Satyam..'),
-      ),
-      body: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
-        builder: (context, state) {
-          if (state.productStatus == ProductStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.productStatus == ProductStatus.success) {
-            return buildProductGrid(state.products!);
-          } else if (state.productStatus == ProductStatus.failure) {
-            return Center(child: Text('Error: ${state.failure}'));
-          } else {
-            return const Text('Something Went Wrong !');
-          }
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Hello Satyam..'),
+        ),
+        body: Column(
+          children: [
+            const SearchBar(
+              elevation: MaterialStatePropertyAll(5),
+              leading: Icon(Icons.search),
+              hintText: 'Search',
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
+                builder: (context, state) {
+                  if (state.productStatus == ProductStatus.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.productStatus == ProductStatus.success) {
+                    return buildProductGrid(state.products!);
+                  } else if (state.productStatus == ProductStatus.failure) {
+                    return Center(child: Text('Error: ${state.failure}'));
+                  } else {
+                    return const Text('Something Went Wrong !');
+                  }
+                },
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget buildProductGrid(List<Product> products) {
@@ -65,16 +79,21 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return GestureDetector(
       onTap: () {
         //navigate to product detail screen
+        showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => ProductDetails(
+                  product: product,
+                ));
       },
       child: Card(
-        // color: Colors.amber,
         margin: const EdgeInsets.all(5.0),
         child: Stack(
           children: [
             buildProductCardContent(product),
             Positioned(
               right: 0,
-              child: buildDiscountTag(product),
+              child: DiscountTag(product: product),
             ),
           ],
         ),
@@ -88,18 +107,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-                10.0), // Adjust the value for desired corner radius
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0), // Same value as above
+            borderRadius: BorderRadius.circular(10.0),
             child: Image.network(
               product.productImgUrl!,
               fit: BoxFit.fitWidth,
             ),
           ),
         ),
-
         const Spacer(),
         Container(
           padding: const EdgeInsetsDirectional.only(start: 5),
@@ -132,29 +149,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     ),
                   ),
                   const Spacer(),
-                  const FavoriteAndCart(),
+                  FavoriteAndCart(
+                    productId: product.id,
+                  ),
                 ],
               ),
             ],
           ),
         ),
-        // const Spacer(),
       ],
-    );
-  }
-
-  Widget buildDiscountTag(Product product) {
-    final originalPrice = product.productPrice as num;
-    final discountedPrice = product.sellingPrice as num;
-
-    final discount = (originalPrice - discountedPrice) / originalPrice;
-    final discountPercentage = (discount * 100).ceil();
-    return CustomButton(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-      text: '$discountPercentage%',
-      backgroundColor: const Color.fromARGB(238, 243, 176, 43),
-      textColor: Colors.white,
     );
   }
 }

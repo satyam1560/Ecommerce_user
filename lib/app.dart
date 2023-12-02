@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_user/routes/app_routes_configuration.dart';
 import 'package:ecommerce_user/src/core/features/authentication/data/datasources/auth_repo.dart';
+import 'package:ecommerce_user/src/core/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_user/src/core/features/display_products/presentation/bloc/display_products_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
             create: (context) => DisplayProductsBloc(
                 // authRepository: context.read<AuthRepository>(),
                 ),
+          ),
+          BlocProvider<CartBloc>(
+            create: (context) => CartBloc(),
           ),
         ],
         child: MaterialApp.router(

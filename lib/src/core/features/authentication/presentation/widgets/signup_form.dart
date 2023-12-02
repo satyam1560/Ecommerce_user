@@ -73,6 +73,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 CustomFormField(
                   icondata: const Icon(Icons.email),
                   hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
                   textEditingController: widget._email,
                   autofocus: false,
                   obsecureText: false,
@@ -81,6 +82,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 CustomFormField(
                   icondata: const Icon(Icons.phone),
                   hintText: 'Phone Number',
+                  keyboardType: TextInputType.number,
                   textEditingController: widget._phoneNo,
                   autofocus: false,
                   obsecureText: false,
