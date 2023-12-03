@@ -10,9 +10,11 @@ class CartState extends Equatable {
   final List<String> cartProductIds; // New field
   final List<CartModel>? cartProduct;
   final List<CartProduct>? cartproducts;
+  final double totalPrice;
 
   const CartState(
       {required this.cartStatus,
+      required this.totalPrice,
       required this.failure,
       this.productId,
       this.cartProductIds = const [], // Initialize to an empty list
@@ -26,8 +28,10 @@ class CartState extends Equatable {
     List<String>? cartProductIds,
     List<CartModel>? cartProduct,
     List<CartProduct>? cartproducts,
+    double? totalPrice,
   }) {
     return CartState(
+      totalPrice: totalPrice ?? this.totalPrice,
       cartproducts: cartproducts ?? this.cartproducts,
       cartStatus: cartStatus ?? this.cartStatus,
       failure: failure ?? this.failure,
@@ -38,6 +42,7 @@ class CartState extends Equatable {
   }
 
   factory CartState.initial() => const CartState(
+        totalPrice: 0.0,
         cartproducts: [],
         cartProduct: [],
         cartStatus: AddToCartStatus.initial,
@@ -53,6 +58,7 @@ class CartState extends Equatable {
         productId,
         cartProductIds,
         cartProduct,
-        cartproducts
+        cartproducts,
+        totalPrice
       ];
 }

@@ -2,6 +2,7 @@ import 'package:ecommerce_user/src/core/features/cart/data/datasources/cart_repo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../utils/constants/sizes.dart';
 import '../../../authentication/presentation/bloc/auth/authentication_bloc.dart';
 import '../bloc/cart_bloc.dart';
 
@@ -15,6 +16,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   CartRepo cartRepo = CartRepo();
   static String uid = '';
+
   @override
   void initState() {
     super.initState();
@@ -53,54 +55,93 @@ class _CartScreenState extends State<CartScreen> {
                         } else if (state.cartStatus ==
                             AddToCartStatus.success) {
                           final cartProduct = state.cartproducts;
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: cartProduct!.length,
-                            itemBuilder: (context, index) {
-                              var productcart = cartProduct[index];
+                          final cartProductPrice = state.totalPrice;
 
-                              return Dismissible(
-                                  key: UniqueKey(),
-                                  onDismissed: (direction) {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      RemoveFromCartEvent(
-                                        currentUserId: uid,
-                                        productId: productcart.id,
-                                      ),
-                                    );
-                                  },
-                                  background: Container(
-                                    color: Colors.red,
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  child: Card(
-                                    child: ListTile(
-                                      leading: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          productcart.productImgUrl ?? '',
-                                          filterQuality: FilterQuality.low,
+                          return Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: cartProduct!.length,
+                                itemBuilder: (context, index) {
+                                  var productcart = cartProduct[index];
+
+                                  return Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (direction) {
+                                      BlocProvider.of<CartBloc>(context).add(
+                                        RemoveFromCartEvent(
+                                          currentUserId: uid,
+                                          productId: productcart.id,
                                         ),
+                                      );
+                                    },
+                                    background: Container(
+                                      color: Colors.red,
+                                      alignment: Alignment.centerRight,
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
                                       ),
-                                      title: Text(
-                                        productcart.title ?? '',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                      subtitle: Text(
-                                        '₹ ${productcart.sellingPrice}',
-                                      ),
-
-                                      // Other properties go here
                                     ),
-                                  ));
-                            },
+                                    child: Card(
+                                      child: ListTile(
+                                        leading: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            productcart.productImgUrl ?? '',
+                                            filterQuality: FilterQuality.low,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          productcart.title ?? '',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        subtitle: Text(
+                                          '₹ ${productcart.sellingPrice}',
+                                        ),
+
+                                        // Other properties go here
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Total Price:\n₹ $cartProductPrice',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 10,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: TSizes.defaultSpace),
+                                      ),
+                                      onPressed: () {
+                                        // Handle the "Pay Now" button press
+                                        // You can navigate to the payment screen or perform any other action here
+                                        // For simplicity, I'm just printing a message
+                                        print(
+                                            'Processing payment. Total amount: $cartProductPrice');
+                                      },
+                                      child: const Text('Pay Now'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           );
                         } else if (state.cartStatus ==
                             AddToCartStatus.initial) {
