@@ -1,15 +1,29 @@
 import 'package:ecommerce_user/src/core/features/display_products/data/models/product_model.dart';
+import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/quantity.dart';
 import 'package:ecommerce_user/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../utils/constants/colors.dart';
-import '../../../cart/presentation/widgets/favorite_cart.dart';
+import '../../data/models/add_to_cart_model.dart';
+import '../bloc/add_to_car_bloc/add_to_cart_bloc.dart';
+import '../widgets/add_to_cart_button.dart';
 import '../widgets/discount.dart';
+import '../widgets/favorite_button.dart';
 
-class ProductDetails extends StatelessWidget {
+class ProductDetails extends StatefulWidget {
   final Product product;
+  final String userId;
 
-  const ProductDetails({super.key, required this.product});
+  const ProductDetails(
+      {super.key, required this.product, required this.userId});
+
+  @override
+  State<ProductDetails> createState() => _ProductDetailsState();
+}
+
+class _ProductDetailsState extends State<ProductDetails> {
+  int? selectedQuantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -28,25 +42,25 @@ class ProductDetails extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.network(
-                      product.productImgUrl!,
+                      widget.product.productImgUrl!,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
                 ),
-                DiscountTag(product: product),
+                DiscountTag(product: widget.product),
               ],
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
-              product.title!,
+              widget.product.title!,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
-            Text(product.description!,
+            Text(widget.product.description!,
                 style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: TSizes.defaultSpace),
             Text(
-              '₹ ${double.parse(product.productPrice.toString())}',
+              '₹ ${double.parse(widget.product.productPrice.toString())}',
               style: const TextStyle(
                 decoration: TextDecoration.lineThrough,
                 fontWeight: FontWeight.bold,
@@ -56,21 +70,43 @@ class ProductDetails extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '₹ ${double.parse(product.sellingPrice.toString())}',
+                  '₹ ${double.parse(widget.product.sellingPrice.toString())}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: TColors.buttonPrimary,
                   ),
                 ),
                 const Spacer(),
-                FavoriteAndCart(
-                  productId: product.id,
-                ),
+
+                Quantity(onQuantitySelected: (int value) {
+                  selectedQuantity = value;
+                }),
+                //favorite button
+                const AddToWishlistIcon(),
+                //add to cart button
+                AddToCartIcon(
+                    onPressed: () {
+                      submitWithQuantity(context);
+                    },
+                    productId: widget.product.id!)
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void submitWithQuantity(BuildContext context) {
+    context.read<AddToCartBloc>().add(
+          AddProductToCartEvent(
+            addToCartModel: AddToCartModel(
+              productId: widget.product.id,
+              userId: widget.userId,
+              quantity: selectedQuantity,
+            ),
+          ),
+        );
+    print('button pressed');
   }
 }

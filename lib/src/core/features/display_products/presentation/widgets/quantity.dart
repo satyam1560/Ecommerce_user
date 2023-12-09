@@ -1,49 +1,40 @@
+import 'package:flutter/material.dart';
 
+class Quantity extends StatefulWidget {
+  final ValueChanged<int> onQuantitySelected;
 
-// class QuantitySelector extends StatefulWidget {
-//   // final int maxQuantity;
-//   final ValueChanged<int> onSelectedQuantity;
+  const Quantity({Key? key, required this.onQuantitySelected})
+      : super(key: key);
 
-//   const QuantitySelector({
-//     super.key,
-//     required this.onSelectedQuantity,
-//   });
+  @override
+  State<Quantity> createState() => _QuantityState();
+}
 
-//   @override
-//   _QuantitySelectorState createState() => _QuantitySelectorState();
-// }
+class _QuantityState extends State<Quantity> {
+  int _currentQuantity = 1;
 
-// class _QuantitySelectorState extends State<QuantitySelector> {
-//   int currentQuantity = 1;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         IconButton(
-//           icon: const Icon(Icons.remove),
-//           onPressed: () {
-//             if (currentQuantity > 1) {
-//               setState(() {
-//                 currentQuantity--;
-//               });
-//               widget.onSelectedQuantity(currentQuantity);
-//             }
-//           },
-//         ),
-//         Text('$currentQuantity'),
-//         IconButton(
-//           icon: const Icon(Icons.add),
-//           onPressed: () {
-//             if (currentQuantity < 10) {
-//               setState(() {
-//                 currentQuantity++;
-//               });
-//               widget.onSelectedQuantity(currentQuantity);
-//             }
-//           },
-//         ),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<int>(
+      value: _currentQuantity,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      underline: Container(), // This removes the underline
+      onChanged: (int? newValue) {
+        setState(() {
+          _currentQuantity = newValue!;
+        });
+        widget.onQuantitySelected(
+            _currentQuantity); // This calls the callback with the selected quantity
+      },
+      items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          .map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
+          value: value,
+          child: Text('$value'),
+        );
+      }).toList(),
+    );
+  }
+}

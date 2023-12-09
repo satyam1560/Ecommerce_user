@@ -1,11 +1,17 @@
+import 'package:ecommerce_user/src/core/features/authentication/data/datasources/auth_repo.dart';
+import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/add_to_cart_button.dart';
 import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/discount.dart';
+import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/favorite_button.dart';
 import 'package:ecommerce_user/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../cart/presentation/widgets/favorite_cart.dart';
+// import '../../../cart/presentation/widgets/favorite_cart.dart';
+import '../../data/datasources/add_to_cart.dart';
+import '../../data/models/add_to_cart_model.dart';
 import '../../data/models/product_model.dart';
-import '../bloc/display_products_bloc.dart';
+import '../bloc/add_to_car_bloc/add_to_cart_bloc.dart';
+import '../bloc/display_product_bloc/display_products_bloc.dart';
 import 'product_details.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -16,8 +22,10 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  late final String? currentUserId;
   @override
   void initState() {
+    currentUserId = context.read<AuthRepository>().currentUserId;
     context.read<DisplayProductsBloc>().add(DisplayProductItems());
     super.initState();
   }
@@ -25,38 +33,40 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Hello Satyam..'),
-        ),
-        body: Column(
-          children: [
-            const SearchBar(
-              elevation: MaterialStatePropertyAll(5),
-              leading: Icon(Icons.search),
-              hintText: 'Search',
+      appBar: AppBar(
+        title: const Text('Hello Satyam..'),
+      ),
+      body: Column(
+        children: [
+          const SearchBar(
+            elevation: MaterialStatePropertyAll(5),
+            leading: Icon(Icons.search),
+            hintText: 'Search',
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
+              builder: (context, state) {
+                if (state.productStatus == ProductStatus.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state.productStatus == ProductStatus.success) {
+                  return buildProductGrid(state.products!);
+                } else if (state.productStatus == ProductStatus.failure) {
+                  return Center(child: Text('Error: ${state.failure}'));
+                } else {
+                  return const Text('Something Went Wrong !');
+                }
+              },
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
-                builder: (context, state) {
-                  if (state.productStatus == ProductStatus.loading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.productStatus == ProductStatus.success) {
-                    return buildProductGrid(state.products!);
-                  } else if (state.productStatus == ProductStatus.failure) {
-                    return Center(child: Text('Error: ${state.failure}'));
-                  } else {
-                    return const Text('Something Went Wrong !');
-                  }
-                },
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
+  AddToCart addToCart = AddToCart();
   Widget buildProductGrid(List<Product> products) {
     const double itemWidth = 180;
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -84,6 +94,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             context: context,
             builder: (context) => ProductDetails(
                   product: product,
+                  userId: currentUserId!,
                 ));
       },
       child: Card(
@@ -149,9 +160,24 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     ),
                   ),
                   const Spacer(),
-                  FavoriteAndCart(
-                    productId: product.id,
-                  ),
+
+                  //favorite button
+                  const AddToWishlistIcon(),
+                  //add to cart button
+                  AddToCartIcon(
+                    onPressed: () {
+                      context.read<AddToCartBloc>().add(
+                            AddProductToCartEvent(
+                              addToCartModel: AddToCartModel(
+                                  productId: product.id,
+                                  userId: currentUserId,
+                                  quantity: 1),
+                            ),
+                          );
+                      print('button pressed');
+                    },
+                    productId: product.id!,
+                  )
                 ],
               ),
             ],

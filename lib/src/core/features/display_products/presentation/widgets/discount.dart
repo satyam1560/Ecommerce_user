@@ -13,20 +13,15 @@ class DiscountTag extends StatelessWidget {
     final discountedPrice = product.sellingPrice as num;
 
     final discount = (originalPrice - discountedPrice) / originalPrice;
-    final discountPercentage =
-        (discount * 100).ceil(); // Format to two decimal places
+    final discountPercentage = (discount * 100).ceil();
 
     return Positioned(
       right: 0,
       child: CustomButton(
         margin: const EdgeInsets.all(10),
-        // Styling for the discount tag button.
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-        // Text to display the discount percentage.
         text: '$discountPercentage%',
-        // Background color for the discount tag.
         backgroundColor: const Color.fromARGB(238, 243, 176, 43),
-        // Text color for the discount tag.
         textColor: Colors.white,
       ),
     );

@@ -35,16 +35,4 @@ class ProductRepository {
       return null;
     }
   }
-
-  // Future<String?> getProductById() async {
-  //   DocumentSnapshot doc = await products.doc().get();
-  //   print(doc);
-  //   if (doc.exists) {
-  //     // Product product = Product.fromMap(doc.data() as Map<String, dynamic>);
-  //     String productById = doc.id;
-  //     return productById;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 }

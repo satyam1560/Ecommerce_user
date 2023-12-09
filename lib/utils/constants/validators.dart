@@ -1,6 +1,6 @@
 class FormValidators {
   String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return 'Please enter an email address';
     }
 // Define a regular expression for a basic email pattern
@@ -17,7 +17,7 @@ class FormValidators {
   }
 
   String? validateFullName(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return 'Please enter your full name';
     }
 
@@ -34,7 +34,7 @@ class FormValidators {
   }
 
   String? validatePhoneNumber(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return 'Please enter your phone number';
     }
 

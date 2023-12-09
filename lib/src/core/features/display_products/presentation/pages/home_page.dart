@@ -1,9 +1,10 @@
-import 'package:ecommerce_user/src/core/features/cart/presentation/pages/cart_screen.dart';
 import 'package:ecommerce_user/src/core/features/display_products/presentation/pages/home_page_screen.dart';
 import 'package:ecommerce_user/src/core/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:ecommerce_user/src/core/features/profile/presentation/pages/profile_screen.dart';
 import 'package:ecommerce_user/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../../cart/presentation/pages/cart_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

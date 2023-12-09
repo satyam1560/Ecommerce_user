@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../data/datasources/product_repo.dart';
-import '../../data/models/product_model.dart';
+import '../../../data/datasources/product_repo.dart';
+import '../../../data/models/product_model.dart';
 
 part 'display_products_event.dart';
 part 'display_products_state.dart';
