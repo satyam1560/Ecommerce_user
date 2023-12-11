@@ -11,6 +11,7 @@ import 'src/core/features/authentication/presentation/bloc/signin/signin_cubit.d
 import 'src/core/features/authentication/presentation/bloc/signup/signup_cubit.dart';
 import 'src/core/features/cart/presentation/bloc/cart_bloc.dart';
 import 'src/core/features/display_products/presentation/bloc/add_to_car_bloc/add_to_cart_bloc.dart';
+import 'src/core/features/my_orders/presentation/bloc/my_orders_bloc.dart';
 import 'utils/theme/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<CartBloc>(
             create: (context) => CartBloc(),
+          ),
+          BlocProvider<MyOrdersBloc>(
+            create: (context) => MyOrdersBloc(),
           ),
         ],
         child: MaterialApp.router(

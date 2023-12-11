@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../payment/presentation/widgets/add_delivery_details.dart';
+import '../../data/models/proceed_checkout_model.dart';
 import '../../data/repositories/display_cart_repo.dart';
 import '../../data/repositories/proceed_checkout_repo.dart';
 import '../bloc/cart_bloc.dart';
@@ -60,6 +61,7 @@ class _CartScreenState extends State<CartScreen> {
                         } else if (state.cartStatus ==
                             DisplayCartProductStatus.success) {
                           final cartProduct = state.cartProducts;
+                          // print('cartProduct $cartProduct');
 
                           return Column(
                             children: [
@@ -136,29 +138,58 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                     ElevatedButton(
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) =>
-                                                  AddDeliveryDetails(
-                                                      totalCheckoutPrice:
-                                                          state.totalPrice,
-                                                      productCart:
-                                                          state.cartProducts ??
-                                                              [],
-                                                      userId:
-                                                          currentUserId.uid));
-                                        },
-                                        child:
-                                            const Text('Proceed To Checkout'))
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) => Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom,
+                                            ),
+                                            child: AddDeliveryDetails(
+                                                totalCheckoutPrice:
+                                                    state.totalPrice,
+                                                productCart: cartProduct,
+                                                userId: currentUserId.uid),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Proceed To Checkout'),
+                                    ),
                                   ],
                                 ),
                               ),
+                              //! this is for testing purpose afterwords it will be removed
+                              FloatingActionButton(onPressed: () {
+                                ProceedToCheckoutRepo proceedToCheckoutRepo =
+                                    ProceedToCheckoutRepo();
+                                List<Orders> ordersList = cartProduct
+                                    .map((item) => Orders(
+                                        userId: currentUserId.uid,
+                                        customerName: 'customerName',
+                                        emailId: 'emailId',
+                                        phoneno: 7852586425,
+                                        deliveryAddress: 'deliveryAddress',
+                                        orderId: 'orderId',
+                                        paymentId: 'paymentId',
+                                        signature: 'signature',
+                                        quantity: item.quantity as int,
+                                        imageUrl: item.imageUrl,
+                                        price: item.price as double,
+                                        title: item.title))
+                                    .toList();
+
+                                proceedToCheckoutRepo.enterOrderAndAddress(
+                                    ordersList: ordersList);
+                              })
                             ],
                           );
                         } else {
                           // Handle error state
-                          return const Text('Error loading cart products');
+                          return const Center(
+                              child: Text('No Products found in cart'));
                         }
                       },
                     ),
@@ -169,61 +200,33 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ),
-      floatingActionButton: Row(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-//           FloatingActionButton(
-//             onPressed: () async {
-//               ProceedToCheckoutRepo repo = ProceedToCheckoutRepo();
-
-//               String userID = 'F9oehnrO8CYotAI2RhEuUyNASp33';
-//               String fullname = 'randomFullName';
-//               String emailId = 'randomEmailId';
-//               String phoneNo = 'randomPhoneNo';
-//               String address = 'randomAddress';
-
-//               // Call enterDeliveryAddress and get the document ID
-//               String docID = await repo.enterDeliveryAddress(
-//                 userID: userID,
-//                 fullname: fullname,
-//                 emailId: emailId,
-//                 phoneNo: phoneNo,
-//                 address: address,
-//               );
-// //on sucess
-//               String orderId = 'randomOrderID';
-//               String paymentId = 'randomPaymentID';
-//               String imageUrl = 'randomImageURL';
-//               String title = 'randomTitle';
-//               int price = 1234;
-//               int quantity = 5;
-
-//               // Use the same document ID for enterOrderItem
-//               repo.enterOrderItem(
-//                 userID: userID,
-//                 docID: docID,
-//                 orderId: orderId,
-//                 paymentId: paymentId,
-//                 imageUrl: imageUrl,
-//                 title: title,
-//                 price: price,
-//                 quantity: quantity,
-//               );
-//             },
-//             child: const Text('send'),
-//           ),
-          const SizedBox(width: 20),
-          FloatingActionButton(
-            onPressed: () {
-              ProceedToCheckoutRepo repo = ProceedToCheckoutRepo();
-
-              repo.getAllDocIds('F9oehnrO8CYotAI2RhEuUyNASp33');
-            },
-            child: const Text('receive'),
-          )
-        ],
-      ),
+      // floatingActionButton:  Row(
+      //   // crossAxisAlignment: CrossAxisAlignment.center,
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //  FloatingActionButton(
+      //         backgroundColor: Colors.green,
+      //         onPressed: () {
+      //           ProceedToCheckoutRepo proceedToCheckoutRepo =
+      //               ProceedToCheckoutRepo();
+      //           proceedToCheckoutRepo.enterOrderAndAddress(
+      //               userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
+      //               customerName: 'satyam',
+      //               emailId: 'satyam@gmail.com',
+      //               phoneno: 7582924031,
+      //               deliveryAddress: 'rajeev nagar tilli ward sagar',
+      //               orderId: 'orderId',
+      //               paymentId: 'paymentId',
+      //               signature: 'signature',
+      //               quantity: 3,
+      //               imageUrl: 'imageUrl',
+      //               price: 45.02,
+      //               title: 'title');
+      //         },
+      //         child: const Text('send'),
+      //       ),
+      //   ],
+      // ),
     );
   }
 }

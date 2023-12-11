@@ -37,6 +37,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       },
     );
+
+    on<EmptyCart>(((event, emit) {
+      displayCartRepo.emptyCart(userId: event.userId!);
+      emit(state.copyWith(cartStatus: DisplayCartProductStatus.loading));
+      // emit(CartState.initial());
+      emit(state.copyWith(
+          cartStatus: DisplayCartProductStatus.success,
+          cartProducts: [],
+          totalPrice: 0));
+    }));
   }
 
   Future<void> updateCartProducts(
@@ -47,7 +57,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     for (var element in cartProducts) {
       totalPrice += (element.price! * element.quantity!);
     }
-    print('totalPrice$totalPrice');
+    // print('totalPrice$totalPrice');
     emit(state.copyWith(
         cartStatus: DisplayCartProductStatus.success,
         cartProducts: cartProducts,

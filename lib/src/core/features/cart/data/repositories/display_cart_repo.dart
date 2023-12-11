@@ -81,4 +81,21 @@ class DisplayCartRepo {
       throw e;
     });
   }
+
+  void emptyCart({required String userId}) async {
+    CollectionReference productsCollection =
+        carts.doc(userId).collection('products');
+
+    QuerySnapshot querySnapshot = await productsCollection.get();
+
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      batch.delete(documentSnapshot.reference);
+    }
+
+    await batch.commit();
+
+    await carts.doc(userId).delete();
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../src/core/features/display_products/presentation/pages/home_page.dart';
+import '../src/core/features/my_orders/presentation/pages/my_order_screen.dart';
 import 'app_routes_constants.dart';
 
 class MyAppRouter {
@@ -36,6 +37,13 @@ class MyAppRouter {
       pageBuilder: (context, state) {
         return const MaterialPage(child: HomeScreen());
       },
-    )
+    ),
+    GoRoute(
+      name: MyAppRouteConstants.myOrderRouteName,
+      path: '/myOrder',
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: MyOrderScreen());
+      },
+    ),
   ]);
 }

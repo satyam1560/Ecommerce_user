@@ -1,12 +1,15 @@
 //*   key_id-->     rzp_test_D3d8eyCiQVUMBd
 //*   key_secret--> bT8VTOd7MrDEpjutc7toG7IC
+import 'package:ecommerce_user/src/core/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_user/src/core/features/payment/presentation/widgets/text_fields.dart';
 import 'package:ecommerce_user/utils/constants/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../cart/data/models/display_cart_model.dart';
+import '../../../cart/data/models/proceed_checkout_model.dart';
 import '../../../cart/data/repositories/proceed_checkout_repo.dart';
 import '../../data/repositories/razorpay_order_id.dart';
 
@@ -17,7 +20,7 @@ class AddDeliveryDetails extends StatefulWidget {
       required this.productCart,
       required this.userId});
   final double? totalCheckoutPrice;
-  List<DisplayCartModel> productCart;
+  List<DisplayCartModel>? productCart;
   String userId;
 
   @override
@@ -26,37 +29,38 @@ class AddDeliveryDetails extends StatefulWidget {
 
 class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController fullName = TextEditingController();
-
-  TextEditingController email = TextEditingController();
-
-  TextEditingController phoneNo = TextEditingController();
-
-  TextEditingController fullAddress = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController fullAddressController = TextEditingController();
 
   final FormValidators _formValidators = FormValidators();
-
   final _razorpay = Razorpay();
   late String docID;
 
-  ProceedToCheckoutRepo repo = ProceedToCheckoutRepo();
+  late String fullName;
+  late String email;
+  late String phoneNo;
+  late String fullAddress;
   void saveToDatabase() async {
     if (_formKey.currentState?.validate() ?? false) {
-      String userID = widget.userId;
+      if (fullNameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          phoneNoController.text.isEmpty ||
+          fullAddressController.text.isEmpty) {
+        return;
+      }
 
-      // Call enterDeliveryAddress and get the document ID
-      docID = await repo.enterDeliveryAddress(
-        userID: userID,
-        fullname: fullName.text,
-        emailId: email.text,
-        phoneNo: phoneNo.text,
-        address: fullAddress.text,
-      );
-      print('Full Name: ${fullName.text}');
-      print('Email: ${email.text}');
-      print('Phone No: ${phoneNo.text}');
-      print('Full Address: ${fullAddress.text}');
+      fullName = fullNameController.text;
+      email = emailController.text;
+      phoneNo = phoneNoController.text;
+      fullAddress = fullAddressController.text;
+
       proceedToPay();
+      emailController.clear();
+      fullNameController.clear();
+      phoneNoController.clear();
+      fullAddressController.clear();
     }
   }
 
@@ -68,9 +72,11 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
       'name': 'Acme Corp.',
       'order_id': orderId,
       'timeout': 90,
-      'prefill': {'contact': phoneNo.text, 'email': email.text}
+      'prefill': {
+        'contact': phoneNoController.text,
+        'email': emailController.text
+      }
     };
-    print('options: $options');
     _razorpay.open(options);
   }
 
@@ -83,20 +89,28 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print(
-        'orderId :${response.orderId} ,paymentId : ${response.paymentId}, signature:${response.signature}');
-    repo.enterOrderItem(
-      userID: widget.userId,
-      docID: docID,
-      signature: response.signature!,
-      orderId: response.orderId!,
-      paymentId: response.paymentId!,
-      imageUrl: 'imageUrl',
-      title: 'title',
-      price: 10,
-      quantity: 5,
-    );
-    Fluttertoast.showToast(msg: response.paymentId!);
+    ProceedToCheckoutRepo proceedToCheckoutRepo = ProceedToCheckoutRepo();
+
+    List<Orders> ordersList = widget.productCart!
+        .map((item) => Orders(
+              userId: widget.userId,
+              customerName: fullName,
+              emailId: email,
+              phoneno: int.parse(phoneNo),
+              deliveryAddress: fullAddress,
+              orderId: response.orderId,
+              paymentId: response.paymentId,
+              signature: response.signature,
+              quantity: item.quantity as int,
+              imageUrl: item.imageUrl,
+              price: item.price as double,
+              title: item.title,
+            ))
+        .toList();
+
+    proceedToCheckoutRepo.enterOrderAndAddress(ordersList: ordersList);
+    Fluttertoast.showToast(msg: 'PAYMENT SUCCESSFUL');
+    BlocProvider.of<CartBloc>(context).add(EmptyCart(userId: widget.userId));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -116,22 +130,21 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
         child: Column(
           children: [
             //enter name
             CustomFormField(
-              textEditingController: fullName,
+              textEditingController: fullNameController,
               hintText: 'Name',
               autofocus: true,
               icondata: const Icon(Icons.person),
             ),
             //enter email
             CustomFormField(
-                textEditingController: email,
+                textEditingController: emailController,
                 hintText: 'Email Id',
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) => _formValidators.validateEmail(value),
@@ -140,7 +153,7 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
 
             //enter phoneno
             CustomFormField(
-                textEditingController: phoneNo,
+                textEditingController: phoneNoController,
                 hintText: 'Phone Number',
                 keyboardType: TextInputType.number,
                 validator: (value) =>
@@ -150,7 +163,7 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
 
             //full address
             CustomFormField(
-              textEditingController: fullAddress,
+              textEditingController: fullAddressController,
               maxlines: 3,
               hintText: 'Full Delivery address',
               autofocus: true,

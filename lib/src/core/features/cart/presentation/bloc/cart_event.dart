@@ -29,3 +29,10 @@ class RemoveProductFromCartEvent extends CartEvent {
   @override
   List<Object?> get props => [userId, productId, productPrice];
 }
+
+class EmptyCart extends CartEvent {
+  final String? userId;
+  const EmptyCart({required this.userId});
+  @override
+  List<Object?> get props => [userId];
+}

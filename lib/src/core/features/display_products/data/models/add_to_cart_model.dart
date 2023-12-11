@@ -23,7 +23,6 @@ class AddToCartModel extends Equatable {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'productId': productId,
-      // 'userId': userId,
       'quantity': quantity,
     };
   }

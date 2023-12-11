@@ -6,7 +6,7 @@ class AddToCart {
   CollectionReference carts = FirebaseFirestore.instance.collection('carts');
 
   Future<AddToCartModel> addToCart({required AddToCartModel addToCartModel}) {
-    print('--${addToCartModel.userId}');
+    // print('--${addToCartModel.userId}');
     return carts
         .doc(addToCartModel.userId)
         .collection('products')

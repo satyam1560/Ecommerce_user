@@ -1,3 +1,4 @@
+import 'package:ecommerce_user/src/core/features/my_orders/presentation/pages/my_order_screen.dart';
 import 'package:ecommerce_user/src/core/features/profile/data/datasources/user_repo.dart';
 import 'package:ecommerce_user/src/core/features/profile/data/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +55,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Text(user!.email!),
               const SizedBox(height: TSizes.sm),
-              const Card(
-                child: ListTile(
-                  title: Text('My Orders'),
-                  subtitle: Text('Already have 12 orders'),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to MyOrderScreen when tapped
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MyOrderScreen(), // Remove the curly braces here
+                    ),
+                  );
+                },
+                child: const Card(
+                  child: ListTile(
+                    title: Text('My Orders'),
+                    subtitle: Text('Already have 12 orders'),
+                  ),
                 ),
               ),
               const SizedBox(height: TSizes.sm),
