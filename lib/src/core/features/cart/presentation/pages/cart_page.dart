@@ -2,10 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../utils/constants/sizes.dart';
 import '../../../payment/presentation/widgets/add_delivery_details.dart';
-import '../../data/models/proceed_checkout_model.dart';
 import '../../data/repositories/display_cart_repo.dart';
-import '../../data/repositories/proceed_checkout_repo.dart';
 import '../bloc/cart_bloc.dart';
 
 class CartScreen extends StatefulWidget {
@@ -138,6 +137,12 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                     ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 10,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: TSizes.sm,
+                                            vertical: TSizes.buttonHeight),
+                                      ),
                                       onPressed: () {
                                         showModalBottomSheet(
                                           isScrollControlled: true,
@@ -161,29 +166,6 @@ class _CartScreenState extends State<CartScreen> {
                                   ],
                                 ),
                               ),
-                              //! this is for testing purpose afterwords it will be removed
-                              FloatingActionButton(onPressed: () {
-                                ProceedToCheckoutRepo proceedToCheckoutRepo =
-                                    ProceedToCheckoutRepo();
-                                List<Orders> ordersList = cartProduct
-                                    .map((item) => Orders(
-                                        userId: currentUserId.uid,
-                                        customerName: 'customerName',
-                                        emailId: 'emailId',
-                                        phoneno: 7852586425,
-                                        deliveryAddress: 'deliveryAddress',
-                                        orderId: 'orderId',
-                                        paymentId: 'paymentId',
-                                        signature: 'signature',
-                                        quantity: item.quantity as int,
-                                        imageUrl: item.imageUrl,
-                                        price: item.price as double,
-                                        title: item.title))
-                                    .toList();
-
-                                proceedToCheckoutRepo.enterOrderAndAddress(
-                                    ordersList: ordersList);
-                              })
                             ],
                           );
                         } else {
@@ -200,33 +182,6 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ),
-      // floatingActionButton:  Row(
-      //   // crossAxisAlignment: CrossAxisAlignment.center,
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //  FloatingActionButton(
-      //         backgroundColor: Colors.green,
-      //         onPressed: () {
-      //           ProceedToCheckoutRepo proceedToCheckoutRepo =
-      //               ProceedToCheckoutRepo();
-      //           proceedToCheckoutRepo.enterOrderAndAddress(
-      //               userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
-      //               customerName: 'satyam',
-      //               emailId: 'satyam@gmail.com',
-      //               phoneno: 7582924031,
-      //               deliveryAddress: 'rajeev nagar tilli ward sagar',
-      //               orderId: 'orderId',
-      //               paymentId: 'paymentId',
-      //               signature: 'signature',
-      //               quantity: 3,
-      //               imageUrl: 'imageUrl',
-      //               price: 45.02,
-      //               title: 'title');
-      //         },
-      //         child: const Text('send'),
-      //       ),
-      //   ],
-      // ),
     );
   }
 }

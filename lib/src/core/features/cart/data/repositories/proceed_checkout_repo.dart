@@ -59,15 +59,4 @@ class ProceedToCheckoutRepo {
   }
 
 //! below one has to be implemented in my order page
-
-  Future<void> getAllDocIds(String userID) async {
-    var querySnapshot =
-        await orders.doc(userID).collection('orderedProducts').get();
-    for (var doc in querySnapshot.docs) {
-      print('----------------------------------------');
-      print('Document ID: ${doc.id}');
-      print('Document DATA: ${doc.data()}');
-      print('----------------------------------------');
-    }
-  }
 }

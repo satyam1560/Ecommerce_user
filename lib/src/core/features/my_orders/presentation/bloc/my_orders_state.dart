@@ -5,7 +5,7 @@ enum MyOrderStatus { initial, loading, success }
 
 class MyOrderState extends Equatable {
   final MyOrderStatus? myOrderStatus;
-  final List<MyOrderModel>? myOrder;
+  final List<OrderModel>? myOrder;
   const MyOrderState({
     required this.myOrderStatus,
     this.myOrder,
@@ -13,7 +13,7 @@ class MyOrderState extends Equatable {
 
   MyOrderState copyWith({
     MyOrderStatus? myOrderStatus,
-    List<MyOrderModel>? myOrder,
+    List<OrderModel>? myOrder,
   }) {
     return MyOrderState(
       myOrderStatus: myOrderStatus ?? this.myOrderStatus,

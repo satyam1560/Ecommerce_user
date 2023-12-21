@@ -1,12 +1,13 @@
 import 'package:ecommerce_user/src/core/features/authentication/data/datasources/auth_repo.dart';
 import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/add_to_cart_button.dart';
 import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/discount.dart';
-import 'package:ecommerce_user/src/core/features/display_products/presentation/widgets/favorite_button.dart';
+import 'package:ecommerce_user/src/core/features/favorite/data/models/add_to_wishlist.dart';
+import 'package:ecommerce_user/src/core/features/favorite/presentation/bloc/favorite_bloc.dart';
+import 'package:ecommerce_user/src/core/features/favorite/presentation/widgets/favorite_button.dart';
 import 'package:ecommerce_user/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../cart/data/repositories/proceed_checkout_repo.dart';
 import '../../data/datasources/add_to_cart.dart';
 import '../../data/models/add_to_cart_model.dart';
 import '../../data/models/product_model.dart';
@@ -33,75 +34,37 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Hello Satyam..'),
-        ),
-        body: Column(
-          children: [
-            const SearchBar(
-              elevation: MaterialStatePropertyAll(5),
-              leading: Icon(Icons.search),
-              hintText: 'Search',
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
-                builder: (context, state) {
-                  if (state.productStatus == ProductStatus.loading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.productStatus == ProductStatus.success) {
-                    return buildProductGrid(state.products!);
-                  } else if (state.productStatus == ProductStatus.failure) {
-                    return Center(child: Text('Error: ${state.failure}'));
-                  } else {
-                    return const Text('Something Went Wrong !');
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FloatingActionButton(
-              backgroundColor: Colors.pink,
-              onPressed: () {
-                // BlocProvider.of<MyOrdersBloc>(context).add(
-                //     const PurchasedItems(userId: 'F9oehnrO8CYotAI2RhEuUyNASp33'));
-                ProceedToCheckoutRepo proceedToCheckoutRepo =
-                    ProceedToCheckoutRepo();
-                proceedToCheckoutRepo
-                    .getAllDocIds('F9oehnrO8CYotAI2RhEuUyNASp33');
+      appBar: AppBar(
+        title: const Text('Hello Satyam..'),
+      ),
+      body: Column(
+        children: [
+          const SearchBar(
+            elevation: MaterialStatePropertyAll(5),
+            leading: Icon(Icons.search),
+            hintText: 'Search',
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: BlocBuilder<DisplayProductsBloc, DisplayProductState>(
+              builder: (context, state) {
+                if (state.productStatus == ProductStatus.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state.productStatus == ProductStatus.success) {
+                  return buildProductGrid(state.products!);
+                } else if (state.productStatus == ProductStatus.failure) {
+                  return Center(child: Text('Error: ${state.failure}'));
+                } else {
+                  return const Text('Something Went Wrong !');
+                }
               },
-              child: const Text('receive'),
             ),
-            const SizedBox(width: 20),
-            // FloatingActionButton(
-            //   backgroundColor: Colors.green,
-            //   onPressed: () {
-            //     ProceedToCheckoutRepo proceedToCheckoutRepo =
-            //         ProceedToCheckoutRepo();
-            //     proceedToCheckoutRepo.enterOrderAndAddress(
-            //         userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
-            //         customerName: 'satyam',
-            //         emailId: 'satyam@gmail.com',
-            //         phoneno: 7582924031,
-            //         deliveryAddress: 'rajeev nagar tilli ward sagar',
-            //         orderId: 'orderId',
-            //         paymentId: 'paymentId',
-            //         signature: 'signature',
-            //         quantity: 3,
-            //         imageUrl: 'imageUrl',
-            //         price: 45.02,
-            //         title: 'title');
-            //   },
-            //   child: const Text('send'),
-            // ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   AddToCart addToCart = AddToCart();
@@ -200,7 +163,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   const Spacer(),
 
                   //favorite button
-                  const AddToWishlistIcon(),
+                  AddToWishlistIcon(
+                    onPressed: () {
+                      BlocProvider.of<FavoriteBloc>(context).add(
+                        AddProductToWishlist(
+                          addToWishlistModel: AddToWishlistModel(
+                            productId: product.id,
+                            userId: currentUserId,
+                            quantity: 1,
+                            imageUrl: product.productImgUrl,
+                            title: product.title,
+                            price: product.sellingPrice as double,
+                          ),
+                        ),
+                      );
+                    },
+                    productId: product.id ?? '',
+                  ),
                   //add to cart button
                   AddToCartIcon(
                     onPressed: () {

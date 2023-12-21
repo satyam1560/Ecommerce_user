@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../utils/constants/colors.dart';
+import '../../../favorite/data/models/add_to_wishlist.dart';
+import '../../../favorite/presentation/bloc/favorite_bloc.dart';
+import '../../../favorite/presentation/widgets/favorite_button.dart';
 import '../../data/models/add_to_cart_model.dart';
 import '../bloc/add_to_car_bloc/add_to_cart_bloc.dart';
 import '../widgets/add_to_cart_button.dart';
 import '../widgets/discount.dart';
-import '../widgets/favorite_button.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -82,7 +84,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                   selectedQuantity = value;
                 }),
                 //favorite button
-                const AddToWishlistIcon(),
+                AddToWishlistIcon(
+                  onPressed: () {
+                    BlocProvider.of<FavoriteBloc>(context).add(
+                      AddProductToWishlist(
+                        addToWishlistModel: AddToWishlistModel(
+                          productId: widget.product.id,
+                          userId: widget.userId,
+                          quantity: 1,
+                          imageUrl: widget.product.productImgUrl,
+                          title: widget.product.title,
+                          price: widget.product.sellingPrice as double,
+                        ),
+                      ),
+                    );
+                  },
+                  productId: widget.product.id ?? '',
+                ),
                 //add to cart button
                 AddToCartIcon(
                     onPressed: () {

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../routes/app_routes_constants.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../authentication/presentation/bloc/auth/authentication_bloc.dart';
+import '../../../my_orders/presentation/bloc/my_orders_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -65,20 +66,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 },
-                child: const Card(
+                child: Card(
                   child: ListTile(
-                    title: Text('My Orders'),
-                    subtitle: Text('Already have 12 orders'),
+                    title: const Text('My Orders'),
+                    subtitle: BlocBuilder<MyOrdersBloc, MyOrderState>(
+                      builder: (context, state) {
+                        return Text(
+                            'Already have ${state.myOrder?.length} orders');
+                      },
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: TSizes.sm),
-              const Card(
-                child: ListTile(
-                  title: Text('Shipping Address'),
-                  subtitle: Text('3 addresses'),
-                ),
-              ),
+              // const Card(
+              //   child: ListTile(
+              //     title: Text('Shipping Address'),
+              //     subtitle: Text('3 addresses'),
+              //   ),
+              // ),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(20),

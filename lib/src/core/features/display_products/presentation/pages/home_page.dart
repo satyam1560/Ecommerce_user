@@ -1,9 +1,12 @@
 import 'package:ecommerce_user/src/core/features/display_products/presentation/pages/home_page_screen.dart';
+import 'package:ecommerce_user/src/core/features/favorite/presentation/bloc/favorite_bloc.dart';
 import 'package:ecommerce_user/src/core/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:ecommerce_user/src/core/features/profile/presentation/pages/profile_screen.dart';
 import 'package:ecommerce_user/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,8 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         indicatorColor: TColors.buttonPrimary,
         selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
+        destinations: <Widget>[
+          const NavigationDestination(
             selectedIcon: Icon(
               Icons.home,
               color: TColors.white,
@@ -40,28 +43,36 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(
+            selectedIcon: const Icon(
               Icons.shopping_cart,
               color: TColors.white,
             ),
             icon: Badge(
-              label: Text('3'),
-              child: Icon(Icons.shopping_cart_outlined),
+              label: BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  return Text('${state.cartProducts?.length}');
+                },
+              ),
+              child: const Icon(Icons.shopping_cart_outlined),
             ),
             label: 'Cart',
           ),
           NavigationDestination(
-            selectedIcon: Icon(
+            selectedIcon: const Icon(
               Icons.favorite,
               color: TColors.white,
             ),
             icon: Badge(
-              label: Text('2'),
-              child: Icon(Icons.favorite_border_outlined),
+              label: BlocBuilder<FavoriteBloc, FavoriteState>(
+                builder: (context, state) {
+                  return Text('${state.products?.length}');
+                },
+              ),
+              child: const Icon(Icons.favorite_border_outlined),
             ),
             label: 'Favorites',
           ),
-          NavigationDestination(
+          const NavigationDestination(
             selectedIcon: Icon(
               Icons.person,
               color: TColors.white,

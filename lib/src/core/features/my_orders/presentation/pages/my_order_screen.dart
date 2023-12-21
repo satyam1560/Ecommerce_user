@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/my_orders_bloc.dart';
+import '../widgets/custom_card.dart';
 // Import the file where MyOrdersBloc is defined
 
 class MyOrderScreen extends StatefulWidget {
@@ -12,13 +14,15 @@ class MyOrderScreen extends StatefulWidget {
 }
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
+  User currentUserId = FirebaseAuth.instance.currentUser!;
+
   @override
   void initState() {
     super.initState();
 
     // Trigger the event when the screen is built
     BlocProvider.of<MyOrdersBloc>(context).add(
-      const PurchasedItems(userId: 'F9oehnrO8CYotAI2RhEuUyNASp33'),
+      PurchasedItems(userId: currentUserId.uid),
     );
   }
 
@@ -41,8 +45,13 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 itemCount: myOrder!.length,
                 itemBuilder: (context, index) {
                   var order = myOrder[index];
-                  return ListTile(
-                    title: Text(order.orderId),
+                  return CustomCard(
+                    imageUrl: order.imageUrl,
+                    title: order.title,
+                    orderId: order.orderId,
+                    price: order.price,
+                    quantity: order.quantity,
+                    orderDate: order.date,
                   );
                 },
               );

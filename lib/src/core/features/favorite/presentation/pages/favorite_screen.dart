@@ -1,35 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FavoriteScreen extends StatelessWidget {
+import '../bloc/favorite_bloc.dart';
+import '../widgets/custom_wishlist_card.dart';
+
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
+
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<FavoriteBloc>(context).add(
+        const DisplayProductAtWishlist(userId: 'F9oehnrO8CYotAI2RhEuUyNASp33'));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorites'),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                leading: Icon(Icons.notifications_sharp),
-                title: Text('Notification 1'),
-                subtitle: Text('This is a notification'),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: Icon(Icons.notifications_sharp),
-                title: Text('Notification 2'),
-                subtitle: Text('This is a notification'),
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text('Favorites'),
         ),
-      ),
-    );
+        body: BlocBuilder<FavoriteBloc, FavoriteState>(
+          builder: (context, state) {
+            if (state.status == FavoriteStateStatus.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state.status == FavoriteStateStatus.success) {
+              final wishlistProduct = state.products;
+              return ListView.builder(
+                  itemCount: wishlistProduct!.length,
+                  itemBuilder: (context, index) {
+                    final productList = wishlistProduct[index];
+                    return Dismissible(
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        BlocProvider.of<FavoriteBloc>(context).add(
+                            RemoveProductFromWishlist(
+                                userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
+                                productId: productList.productId!));
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                '${productList.title} removed from wishlist'),
+                          ),
+                        );
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                      key: UniqueKey(),
+                      child: CustomWishlistCard(
+                        userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
+                        productId: productList.productId!,
+                        title: productList.title!,
+                        price: productList.price!,
+                        quantity: productList.quantity!,
+                        imageUrl: productList.imageUrl!,
+                      ),
+                    );
+                  });
+            }
+            return Container();
+          },
+        ));
   }
 }

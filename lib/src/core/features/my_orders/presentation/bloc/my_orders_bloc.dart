@@ -12,8 +12,8 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrderState> {
     on<PurchasedItems>((event, emit) async {
       emit(state.copyWith(myOrderStatus: MyOrderStatus.loading));
       MyOrderRepo myOrderRepo = MyOrderRepo();
-      List<MyOrderModel> result =
-          await myOrderRepo.getAllOrders(userID: event.userId);
+      List<OrderModel> result =
+          await myOrderRepo.getAllOrder(userID: event.userId);
       // print('result of order $result');
       emit(state.copyWith(
           myOrderStatus: MyOrderStatus.success, myOrder: result));
