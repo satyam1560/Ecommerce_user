@@ -9,7 +9,7 @@ enum AuthStatus {
 
 class AuthState extends Equatable {
   final AuthStatus authStatus;
-  final fbAuth.User? user;
+  final fbauth.User? user;
   const AuthState({
     required this.authStatus,
     this.user,
@@ -27,7 +27,7 @@ class AuthState extends Equatable {
 
   AuthState copyWith({
     AuthStatus? authStatus,
-    fbAuth.User? user,
+    fbauth.User? user,
   }) {
     return AuthState(
       authStatus: authStatus ?? this.authStatus,

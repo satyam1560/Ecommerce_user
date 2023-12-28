@@ -9,5 +9,5 @@ class TCardTheme {
       CardTheme(color: TColors.lightPurple, elevation: 10);
 
   /* -- Dark Theme -- */
-  static const DarkCardTheme = CardTheme(color: TColors.black, elevation: 10);
+  static const darkCardTheme = CardTheme(color: TColors.black, elevation: 10);
 }

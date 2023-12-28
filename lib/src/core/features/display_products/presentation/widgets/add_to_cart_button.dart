@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/add_to_car_bloc/add_to_cart_bloc.dart';
 
 class AddToCartIcon extends StatelessWidget {
-  void Function()? onPressed;
+  final void Function()? onPressed;
   final String productId;
-  AddToCartIcon({super.key, required this.onPressed, required this.productId});
+  const AddToCartIcon(
+      {super.key, required this.onPressed, required this.productId});
 
   @override
   Widget build(BuildContext context) {

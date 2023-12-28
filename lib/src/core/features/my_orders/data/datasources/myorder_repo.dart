@@ -10,7 +10,7 @@ class MyOrderRepo {
         await orders.doc(userID).collection('orderedProducts').get();
     for (var i in querySnapshot.docs) {
       placedOrderList.add(OrderModel.fromMap(i.data()['orderItem']));
-      print('DATA $placedOrderList');
+      // print('DATA $placedOrderList');
     }
     return placedOrderList;
   }

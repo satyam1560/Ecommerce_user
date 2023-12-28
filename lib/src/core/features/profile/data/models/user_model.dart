@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class UserModel extends Equatable {
   String? email;
   String? fullName;

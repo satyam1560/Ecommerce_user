@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:ecommerce_user/src/core/features/favorite/data/datasources/wishlist_repo.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../display_products/data/datasources/add_to_cart.dart';
 import '../../../display_products/data/models/add_to_cart_model.dart';

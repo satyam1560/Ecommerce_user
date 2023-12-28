@@ -3,18 +3,14 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
-  String? id;
+  final String? id;
   final String? title;
-  // final String? description;
-  // final num? productPrice;
   final String? productImgUrl;
   final int? productQuantity;
   final num? sellingPrice;
-  Product({
+  const Product({
     this.id,
     this.title,
-    // this.description,
-    // this.productPrice,
     this.productImgUrl,
     this.productQuantity,
     this.sellingPrice,
@@ -23,8 +19,6 @@ class Product extends Equatable {
   Product copyWith({
     String? id,
     String? title,
-    // String? description,
-    // num? productPrice,
     String? productImgUrl,
     int? productQuantity,
     num? sellingPrice,
@@ -32,8 +26,6 @@ class Product extends Equatable {
     return Product(
       id: id ?? this.id,
       title: title ?? this.title,
-      // description: description ?? this.description,
-      // productPrice: productPrice ?? this.productPrice,
       productImgUrl: productImgUrl ?? this.productImgUrl,
       productQuantity: productQuantity ?? this.productQuantity,
       sellingPrice: sellingPrice ?? this.sellingPrice,
@@ -44,8 +36,6 @@ class Product extends Equatable {
     return <String, dynamic>{
       'id': id,
       'title': title,
-      // 'description': description,
-      // 'productPrice': productPrice,
       'productImgUrl': productImgUrl,
       'productQuantity': productQuantity,
       'sellingPrice': sellingPrice,
@@ -56,8 +46,6 @@ class Product extends Equatable {
     return Product(
       id: map['id'] ?? '',
       title: map['title'] ?? '',
-      // description: map['description'] ?? '',
-      // productPrice: map['productPrice'] ?? '',
       productImgUrl: map['productImgUrl'] ?? '',
       productQuantity: map['productQuantity'] ?? '0',
       sellingPrice: map['sellingPrice'] ?? 0,
@@ -71,13 +59,6 @@ class Product extends Equatable {
   @override
   bool get stringify => true;
   @override
-  List<Object?> get props => [
-        id,
-        title,
-        // description,
-        // productPrice,
-        productImgUrl,
-        productQuantity,
-        sellingPrice
-      ];
+  List<Object?> get props =>
+      [id, title, productImgUrl, productQuantity, sellingPrice];
 }

@@ -44,6 +44,6 @@ class TAppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.darkOutlinedButtonTheme,
     textButtonTheme: TTextButtonTheme.darkTextButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.darkInputDecorationTheme,
-    cardTheme: TCardTheme.DarkCardTheme,
+    cardTheme: TCardTheme.darkCardTheme,
   );
 }

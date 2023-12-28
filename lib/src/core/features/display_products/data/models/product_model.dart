@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class Product extends Equatable {
   String? id;
   String? title;

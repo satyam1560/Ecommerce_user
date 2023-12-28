@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
+import 'package:flutter/foundation.dart';
 
 import '../models/custom_error.dart';
 
 class AuthRepository {
   final FirebaseFirestore firebaseFirestore;
-  final fbAuth.FirebaseAuth firebaseAuth;
+  final fbauth.FirebaseAuth firebaseAuth;
   AuthRepository({
     required this.firebaseFirestore,
     required this.firebaseAuth,
   });
   final usersRef = FirebaseFirestore.instance.collection('users');
-  Stream<fbAuth.User?> get user => firebaseAuth.userChanges();
+  Stream<fbauth.User?> get user => firebaseAuth.userChanges();
   String? get currentUserId => firebaseAuth.currentUser?.uid;
 
   Future<void> signup({
@@ -21,21 +22,21 @@ class AuthRepository {
     required int phoneNumber,
   }) async {
     try {
-      final fbAuth.UserCredential userCredential =
+      final fbauth.UserCredential userCredential =
           await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       final signedInUser = userCredential.user!;
-      print('signInUser $signedInUser');
+      debugPrint('signInUser $signedInUser');
 
       await usersRef.doc(signedInUser.uid).set({
         'fullName': fullName,
         'email': email,
         'phoneNumber': phoneNumber,
       });
-    } on fbAuth.FirebaseAuthException catch (e) {
+    } on fbauth.FirebaseAuthException catch (e) {
       throw CustomError(
         code: e.code,
         message: e.message!,
@@ -59,7 +60,7 @@ class AuthRepository {
         email: email,
         password: password,
       );
-    } on fbAuth.FirebaseAuthException catch (e) {
+    } on fbauth.FirebaseAuthException catch (e) {
       throw CustomError(
         code: e.code,
         message: e.message!,

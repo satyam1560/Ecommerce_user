@@ -6,7 +6,6 @@ class AddToCart {
   CollectionReference carts = FirebaseFirestore.instance.collection('carts');
 
   Future<AddToCartModel> addToCart({required AddToCartModel addToCartModel}) {
-    // print('--${addToCartModel.userId}');
     return carts
         .doc(addToCartModel.userId)
         .collection('products')
@@ -14,8 +13,7 @@ class AddToCart {
         .set({'quantity': addToCartModel.quantity}).then((_) {
       return addToCartModel;
     }).catchError((e) {
-      print('catch error${e.toString()}');
-      throw e;
+      throw Exception(e.toString());
     });
   }
 }

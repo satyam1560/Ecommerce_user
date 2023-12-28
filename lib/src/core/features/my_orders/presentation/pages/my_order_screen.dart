@@ -58,7 +58,6 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             }
             return Container();
           },
-        ) // Replace with the actual widget you want to display
-        );
+        ));
   }
 }

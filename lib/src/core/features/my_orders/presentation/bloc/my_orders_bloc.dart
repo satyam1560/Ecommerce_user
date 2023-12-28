@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/datasources/myorder_repo.dart';
 import '../../data/models/myorder_model.dart';
@@ -14,7 +14,6 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrderState> {
       MyOrderRepo myOrderRepo = MyOrderRepo();
       List<OrderModel> result =
           await myOrderRepo.getAllOrder(userID: event.userId);
-      // print('result of order $result');
       emit(state.copyWith(
           myOrderStatus: MyOrderStatus.success, myOrder: result));
     });

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:ecommerce_user/src/core/features/authentication/data/datasources/auth_repo.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'authentication_event.dart';
@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   late final StreamSubscription authSubsription;
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(AuthState.unknown()) {
-    authSubsription = authRepository.user.listen((fbAuth.User? user) {
+    authSubsription = authRepository.user.listen((fbauth.User? user) {
       add(AuthStateChangedEvent(user: user));
     });
 

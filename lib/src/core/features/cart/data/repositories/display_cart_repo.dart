@@ -1,29 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/display_cart_model.dart';
-
-// class DisplayCartRepo {
-//   CollectionReference carts = FirebaseFirestore.instance.collection('carts');
-//   CollectionReference products =
-//       FirebaseFirestore.instance.collection('products');
-
-//   void displayToCart({required String userId}) async {
-//     try {
-//       QuerySnapshot cartSnapshot =
-//           await carts.doc(userId).collection('products').get();
-
-//       for (QueryDocumentSnapshot productDoc in cartSnapshot.docs) {
-//         String productId = productDoc.id;
-//         products.doc(productId).get();
-//         print('product ${products.doc(productId).get()}');
-//         int quantity = productDoc.get('quantity');
-//         print('User ID: $userId, Product ID: $productId, Quantity: $quantity');
-//       }
-//     } catch (e) {
-//       print('ERROR : ${e.toString()}');
-//     }
-//   }
-// }
 
 class DisplayCartRepo {
   final carts = FirebaseFirestore.instance.collection('carts');
@@ -57,11 +35,11 @@ class DisplayCartRepo {
             'userId': userId,
           }));
         } else {
-          print('Product with ID $productId does not exist');
+          debugPrint('Product with ID $productId does not exist');
         }
       }));
     } catch (e) {
-      print('ERROR : ${e.toString()}');
+      debugPrint('ERROR : ${e.toString()}');
     }
 
     return cartItems;
@@ -75,9 +53,9 @@ class DisplayCartRepo {
         .doc(productId)
         .delete()
         .then((_) {
-      print('Product removed from cart successfully');
+      debugPrint('Product removed from cart successfully');
     }).catchError((e) {
-      print('Error removing product from cart: ${e.toString()}');
+      debugPrint('Error removing product from cart: ${e.toString()}');
       throw e;
     });
   }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,10 +13,11 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+  User currentUser = FirebaseAuth.instance.currentUser!;
   @override
   void initState() {
-    BlocProvider.of<FavoriteBloc>(context).add(
-        const DisplayProductAtWishlist(userId: 'F9oehnrO8CYotAI2RhEuUyNASp33'));
+    BlocProvider.of<FavoriteBloc>(context)
+        .add(DisplayProductAtWishlist(userId: currentUser.uid));
     super.initState();
   }
 
@@ -42,7 +44,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       onDismissed: (direction) {
                         BlocProvider.of<FavoriteBloc>(context).add(
                             RemoveProductFromWishlist(
-                                userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
+                                userId: currentUser.uid,
                                 productId: productList.productId!));
 
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +65,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       ),
                       key: UniqueKey(),
                       child: CustomWishlistCard(
-                        userId: 'F9oehnrO8CYotAI2RhEuUyNASp33',
+                        userId: currentUser.uid,
                         productId: productList.productId!,
                         title: productList.title!,
                         price: productList.price!,

@@ -19,8 +19,7 @@ class WishlistRepo {
         .then((_) {
       return addToWishlistModel;
     }).catchError((e) {
-      print('catch error${e.toString()}');
-      throw e;
+      throw Exception(e.toString());
     });
   }
 

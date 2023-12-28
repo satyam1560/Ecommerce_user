@@ -14,14 +14,14 @@ import '../../../cart/data/repositories/proceed_checkout_repo.dart';
 import '../../data/repositories/razorpay_order_id.dart';
 
 class AddDeliveryDetails extends StatefulWidget {
-  AddDeliveryDetails(
+  const AddDeliveryDetails(
       {super.key,
       required this.totalCheckoutPrice,
       required this.productCart,
       required this.userId});
   final double? totalCheckoutPrice;
-  List<DisplayCartModel>? productCart;
-  String userId;
+  final List<DisplayCartModel>? productCart;
+  final String userId;
 
   @override
   State<AddDeliveryDetails> createState() => _AddDeliveryDetailsState();
@@ -114,12 +114,12 @@ class _AddDeliveryDetailsState extends State<AddDeliveryDetails> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print(
+    debugPrint(
         'failure message: ${response.message}, error: ${response.error}, code: ${response.code}');
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    print('External Wallet ${response.walletName}');
+    debugPrint('External Wallet ${response.walletName}');
   }
 
   @override
